@@ -1,0 +1,65 @@
+<!-- 3. To-Do List with Delete and Move Controls -->
+<!doctype html>
+<html>
+  <head>
+    <style>
+      body {
+        font: 16px Arial;
+        max-width: 550px;
+        margin: 40px auto;
+      }
+      li {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 10px 0;
+      }
+      li span {
+        flex: 1;
+      }
+      .done {
+        text-decoration: line-through;
+        color: gray;
+      }
+      button {
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>My To-Do List</h2>
+    <input id="taskInput" placeholder="Enter a task" />
+    <button onclick="addTask()">Add</button>
+    <ul id="list"></ul>
+    <script>
+      function addTask() {
+        const input = document.getElementById("taskInput");
+        if (!input.value.trim()) return;
+        const li = document.createElement("li");
+        const check = document.createElement("input");
+        check.type = "checkbox";
+        const label = document.createElement("span");
+        label.textContent = input.value;
+        check.onchange = () => label.classList.toggle("done", check.checked);
+        const del = document.createElement("button");
+        del.textContent = "Delete";
+        del.onclick = () => li.remove();
+        const up = document.createElement("button");
+        up.textContent = "Up";
+        up.onclick = () => {
+          if (li.previousElementSibling)
+            li.parentNode.insertBefore(li, li.previousElementSibling);
+        };
+        const down = document.createElement("button");
+        down.textContent = "Down";
+        down.onclick = () => {
+          if (li.nextElementSibling)
+            li.parentNode.insertBefore(li.nextElementSibling, li);
+        };
+        li.append(check, label, up, down, del);
+        document.getElementById("list").append(li);
+        input.value = "";
+      }
+    </script>
+  </body>
+</html>

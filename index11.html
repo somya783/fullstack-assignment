@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+  <body>
+    <h1>Mini Shop</h1>
+    <div id="items"></div>
+    <h2>Cart</h2>
+    <div id="cart"></div>
+    <button onclick="checkout()">Place Demo Order</button>
+    <h2>Seller: Add Product</h2>
+    <form id="seller">
+      <input id="pname" placeholder="Product name" required />
+      <input id="pprice" type="number" placeholder="Price" required />
+      <input id="pdesc" placeholder="Description" required /><button>
+        Add
+      </button>
+    </form>
+    <h2>Orders</h2>
+    <div id="orders"></div>
+    <script>
+      let cart = [];
+      async function load() {
+        const ps = await (await fetch("/api/products")).json();
+        items.innerHTML = ps
+          .map(
+            (p) => `<p>${p.name} — ₹${p.price} — ${p.description}
+ <button onclick="add(${p.id})">Add to cart</button></p>`,
+          )
+          .join("");
+        cartView();
+      }
+      function add(id) {
+        const x = cart.find((i) => i.id === id);
+        x ? x.qty++ : cart.push({ id, qty: 1 });
+        cartView();
+      }
+      function cartView() {
+        cartDiv = document.getElementById("cart");
+        cartDiv.textContent = JSON.stringify(cart);
+      }
+      async function checkout() {
+        if (!cart.length) return alert("Cart is empty");
+        const r = await fetch("/api/orders", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ items: cart }),
+        });
+        const o = await r.json();
+        alert("Demo order placed. Total: ₹" + o.total);
+        cart = [];
+        cartView();
+        loadOrders();
+      }
+      seller.onsubmit = async (e) => {
+        e.preventDefault();
+        await fetch("/api/products", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: pname.value,
+            price: +pprice.value,
+            description: pdesc.value,
+          }),
+        });
+        e.target.reset();
+        load();
+      };
+      async function loadOrders() {
+        const o = await (await fetch("/api/orders")).json();
+        orders.innerHTML = o
+          .map((x) => `<p>Order ${x.id}: ₹${x.total} — ${x.status}</p>`)
+          .join("");
+      }
+      load();
+      loadOrders();
+    </script>
+  </body>
+</html>

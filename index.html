@@ -1,0 +1,45 @@
+<!-- Create circles with radii 10px, 20px and 30px (diameters 20px, 40px and 60px). -->
+ 
+<!doctype html>
+<html>
+  <head>
+    <style>
+      .stage {
+        width: 60px;
+        height: 60px;
+        position: relative;
+        margin: 60px;
+      }
+      .circle {
+        position: absolute;
+        border-radius: 50%;
+      }
+      .outer {
+        width: 60px;
+        height: 60px;
+        background: #ef4444;
+      }
+      .middle {
+        width: 40px;
+        height: 40px;
+        left: 10px;
+        top: 10px;
+        background: #22c55e;
+      }
+      .inner {
+        width: 20px;
+        height: 20px;
+        left: 20px;
+        top: 20px;
+        background: #3b82f6;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="stage">
+      <div class="circle outer"></div>
+      <div class="circle middle"></div>
+      <div class="circle inner"></div>
+    </div>
+  </body>
+</html>

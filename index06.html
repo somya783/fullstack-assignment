@@ -1,0 +1,42 @@
+<!-- Random Joke Website Using an API -->
+
+<!doctype html>
+<html>
+  <head>
+    <style>
+      body {
+        font: 18px Arial;
+        text-align: center;
+        margin: 80px auto;
+        max-width: 600px;
+      }
+      #joke {
+        padding: 25px;
+        background: #f1f5f9;
+        border-radius: 12px;
+        min-height: 90px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Random Joke</h2>
+    <p id="joke">Click the button to load a joke.</p>
+    <button onclick="getJoke()">Get Joke</button>
+    <script>
+      async function getJoke() {
+        const out = document.getElementById("joke");
+        out.textContent = "Loading...";
+        try {
+          const res = await fetch(
+            "https://official-joke-api.appspot.com/random_joke",
+          );
+          if (!res.ok) throw new Error("API request failed");
+          const data = await res.json();
+          out.textContent = data.setup + " — " + data.punchline;
+        } catch (e) {
+          out.textContent = "Could not load a joke. Please try again.";
+        }
+      }
+    </script>
+  </body>
+</html>

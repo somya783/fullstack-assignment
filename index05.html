@@ -1,0 +1,79 @@
+<!-- 5. Snake and Ladder Game -->
+
+<!doctype html>
+<html>
+  <head>
+    <style>
+      body {
+        font-family: Arial;
+        text-align: center;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(10, 42px);
+        justify-content: center;
+        margin: 20px auto;
+      }
+      .cell {
+        height: 42px;
+        border: 1px solid #aaa;
+        display: grid;
+        place-items: center;
+      }
+      .player {
+        background: #facc15 !important;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Snake and Ladder</h2>
+    <div id="board" class="grid"></div>
+    <p id="status">Player at square 1</p>
+    <button onclick="roll()">Roll Dice</button>
+    <script>
+      const jumps = {
+        4: 14,
+        9: 31,
+        17: 7,
+        20: 38,
+        28: 84,
+        40: 59,
+        51: 67,
+        54: 34,
+        62: 19,
+        63: 81,
+        64: 60,
+        71: 91,
+        87: 24,
+        93: 73,
+        95: 75,
+        99: 78,
+      };
+      let position = 1;
+      function draw() {
+        const b = document.getElementById("board");
+        b.innerHTML = "";
+        for (let n = 100; n >= 1; n--) {
+          const d = document.createElement("div");
+          d.className = "cell" + (n === position ? " player" : "");
+          d.textContent = n + (jumps[n] ? " → " + jumps[n] : "");
+          b.append(d);
+        }
+      }
+      function roll() {
+        const dice = Math.floor(Math.random() * 6) + 1;
+        if (position + dice <= 100) position += dice;
+        if (jumps[position]) position = jumps[position];
+        document.getElementById("status").textContent =
+          "Dice: " +
+          dice +
+          " | Player at square " +
+          position +
+          (position === 100 ? " — You win!" : "");
+        draw();
+      }
+      draw();
+    </script>
+  </body>
+</html>

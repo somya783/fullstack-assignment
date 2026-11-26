@@ -1,0 +1,61 @@
+<!-- Country University Finder Using an API -->
+
+<!doctype html>
+<html>
+  <head>
+    <style>
+      body {
+        font: 16px Arial;
+        margin: 30px;
+      }
+      li {
+        margin: 12px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>University Finder</h2>
+    <input id="country" placeholder="Enter country, e.g. India" />
+    <button onclick="findUniversities()">Search</button>
+    <p id="msg"></p>
+    <ul id="results"></ul>
+    <script>
+      async function findUniversities() {
+        const country = document.getElementById("country").value.trim();
+        const list = document.getElementById("results"),
+          msg = document.getElementById("msg");
+        list.innerHTML = "";
+        if (!country) {
+          msg.textContent = "Enter a country name.";
+          return;
+        }
+        msg.textContent = "Loading...";
+        try {
+          const url =
+            "https://universities.hipolabs.com/search?country=" +
+            encodeURIComponent(country);
+          const res = await fetch(url);
+          if (!res.ok) throw new Error();
+          const data = await res.json();
+          msg.textContent = data.length + " result(s)";
+          data.forEach((u) => {
+            const li = document.createElement("li");
+            const link = document.createElement("a");
+            link.href = u.web_pages[0] || "#";
+            link.textContent = u.name;
+            link.target = "_blank";
+            li.append(link);
+            li.append(
+              document.createTextNode(
+                " | State/Province: " + (u["state-province"] || "Not provided"),
+              ),
+            );
+            list.append(li);
+          });
+        } catch (e) {
+          msg.textContent = "Unable to fetch universities. Try again.";
+        }
+      }
+    </script>
+  </body>
+</html>
